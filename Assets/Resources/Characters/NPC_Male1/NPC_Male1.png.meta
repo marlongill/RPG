@@ -1,0 +1,440 @@
+fileFormatVersion: 2
+guid: 9ee5bd492a6fc424f89b28856bfc40ff
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 8320837554952940842
+    second: NPC_Male1_0
+  - first:
+      213: -2814571001735138704
+    second: NPC_Male1_1
+  - first:
+      213: 4175878715559394564
+    second: NPC_Male1_2
+  - first:
+      213: 1442699474342511388
+    second: NPC_Male1_3
+  - first:
+      213: 6673423693503828170
+    second: NPC_Male1_4
+  - first:
+      213: 8576719181484203083
+    second: NPC_Male1_5
+  - first:
+      213: -8146237414294768662
+    second: NPC_Male1_6
+  - first:
+      213: 3959295570432549403
+    second: NPC_Male1_7
+  - first:
+      213: 2628722035149264462
+    second: NPC_Male1_8
+  - first:
+      213: -4232354925410557187
+    second: NPC_Male1_9
+  - first:
+      213: -2174725666997879488
+    second: NPC_Male1_10
+  - first:
+      213: -6412317466999408894
+    second: NPC_Male1_11
+  externalObjects: {}
+  serializedVersion: 11
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: -1
+    aniso: -1
+    mipBias: -100
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 32
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 0
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  applyGammaDecoding: 0
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: NPC_Male1_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 96
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape:
+      - - {x: -13, y: 16}
+        - {x: 13, y: 16}
+        - {x: 13, y: -16}
+        - {x: -13, y: -16}
+        - {x: -13, y: 16}
+      tessellationDetail: -1
+      bones: []
+      spriteID: a2d23b8abad897370800000000000000
+      internalID: 8320837554952940842
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NPC_Male1_1
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 96
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape:
+      - - {x: -13, y: 16}
+        - {x: 13, y: 16}
+        - {x: 13, y: -16}
+        - {x: -13, y: -16}
+        - {x: -13, y: 16}
+      tessellationDetail: -1
+      bones: []
+      spriteID: 072367e0692a0f8d0800000000000000
+      internalID: -2814571001735138704
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NPC_Male1_2
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 96
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape:
+      - - {x: -13, y: 16}
+        - {x: 13, y: 16}
+        - {x: 13, y: -16}
+        - {x: -13, y: -16}
+        - {x: -13, y: 16}
+      tessellationDetail: -1
+      bones: []
+      spriteID: 40d380a2193b3f930800000000000000
+      internalID: 4175878715559394564
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NPC_Male1_3
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 64
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape:
+      - - {x: -13, y: 16}
+        - {x: 13, y: 16}
+        - {x: 13, y: -16}
+        - {x: -13, y: -16}
+        - {x: -13, y: 16}
+      tessellationDetail: -1
+      bones: []
+      spriteID: c1304d5378f750410800000000000000
+      internalID: 1442699474342511388
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NPC_Male1_4
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 64
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape:
+      - - {x: -13, y: 16}
+        - {x: 13, y: 16}
+        - {x: 13, y: -16}
+        - {x: -13, y: -16}
+        - {x: -13, y: 16}
+      tessellationDetail: -1
+      bones: []
+      spriteID: ac098feed73cc9c50800000000000000
+      internalID: 6673423693503828170
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NPC_Male1_5
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 64
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape:
+      - - {x: -13, y: 16}
+        - {x: 13, y: 16}
+        - {x: 13, y: -16}
+        - {x: -13, y: -16}
+        - {x: -13, y: 16}
+      tessellationDetail: -1
+      bones: []
+      spriteID: b4c15a677a0a60770800000000000000
+      internalID: 8576719181484203083
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NPC_Male1_6
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 32
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape:
+      - - {x: -13, y: 16}
+        - {x: 13, y: 16}
+        - {x: 13, y: -16}
+        - {x: -13, y: -16}
+        - {x: -13, y: 16}
+      tessellationDetail: -1
+      bones: []
+      spriteID: ae3b6f87b30c2fe80800000000000000
+      internalID: -8146237414294768662
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NPC_Male1_7
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 32
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape:
+      - - {x: -13, y: 16}
+        - {x: 13, y: 16}
+        - {x: 13, y: -16}
+        - {x: -13, y: -16}
+        - {x: -13, y: 16}
+      tessellationDetail: -1
+      bones: []
+      spriteID: b12e864185e32f630800000000000000
+      internalID: 3959295570432549403
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NPC_Male1_8
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 32
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape:
+      - - {x: -13, y: 16}
+        - {x: 13, y: 16}
+        - {x: 13, y: -16}
+        - {x: -13, y: -16}
+        - {x: -13, y: 16}
+      tessellationDetail: -1
+      bones: []
+      spriteID: e46505e63c81b7420800000000000000
+      internalID: 2628722035149264462
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NPC_Male1_9
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape:
+      - - {x: -13, y: 16}
+        - {x: 13, y: 16}
+        - {x: 13, y: -16}
+        - {x: -13, y: -16}
+        - {x: -13, y: 16}
+      tessellationDetail: -1
+      bones: []
+      spriteID: df2678b8e97a345c0800000000000000
+      internalID: -4232354925410557187
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NPC_Male1_10
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 0
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape:
+      - - {x: -13, y: 16}
+        - {x: 13, y: 16}
+        - {x: 13, y: -16}
+        - {x: -13, y: -16}
+        - {x: -13, y: 16}
+      tessellationDetail: -1
+      bones: []
+      spriteID: 04dbaae2782d1d1e0800000000000000
+      internalID: -2174725666997879488
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NPC_Male1_11
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 0
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape:
+      - - {x: -13, y: 16}
+        - {x: 13, y: 16}
+        - {x: 13, y: -16}
+        - {x: -13, y: -16}
+        - {x: -13, y: 16}
+      tessellationDetail: -1
+      bones: []
+      spriteID: 207b778dc3fd207a0800000000000000
+      internalID: -6412317466999408894
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+  spritePackingTag: 
+  pSDRemoveMatte: 0
+  pSDShowRemoveMatteOption: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
