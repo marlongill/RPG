@@ -23,6 +23,9 @@ public class InputController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (Input.GetKey(KeyCode.Escape))
+            Application.Quit();
+
         Vector2 velocity = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
         Vector2.ClampMagnitude(velocity, MAXSPEED);
         velocity *= (MAXSPEED * Time.deltaTime);

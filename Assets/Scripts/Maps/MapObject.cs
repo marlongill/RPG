@@ -38,6 +38,27 @@ public class MapObject : MonoBehaviour
         public List<LayerInfo> Layers;
     }
 
+    private class NPCInfo
+    {
+        public string Name;
+        public string ModelName;
+        public int X;
+        public int Y;
+        public float Speed;
+        public string POI;
+        public string Wander;
+        public string VisFunc;
+        public string VisParam;
+        public string IntFunc;
+        public string IntParam;
+    }
+
+    private class NPCData
+    {
+        public List<NPCInfo> NPC;
+    }
+
+    public string Name;
     public string SpriteSheetName;
     public MapCells mapcells = new MapCells(10, 10);
     public List<MapCells> Layers = new List<MapCells>();
@@ -68,7 +89,8 @@ public class MapObject : MonoBehaviour
         // Block cells occupied by static NPCs to the Path Finding Grid
         if (!npc.CanMove)
         {
-            Grid grid = GetComponentInParent<Grid>();
+            GameObject go = GameObject.FindGameObjectWithTag("Grid");
+            Grid grid = go.GetComponent<Grid>();
             Vector3 position = npc.gameObject.GetComponent<SpriteRenderer>().transform.position;
             Vector3Int cell = grid.WorldToCell(position);
 
@@ -133,22 +155,33 @@ public class MapObject : MonoBehaviour
         if (IsInitialised)
             return;
 
-        string json = "{'Items': " + MetaDataJson + "}";
-        MetaDataInfo metaData = JsonConvert.DeserializeObject<MetaDataInfo>(json);
+        // Get Tile Attributes from named map if we have no sheet
+        string json = "";
 
-        for (int i = 0; i < metaData.Items.Count; i++)
+        if (SpriteSheetName != Name)
         {
-            TileMetaData m = new TileMetaData();
-            foreach (MetaDataItem meta in metaData.Items[i].Data)
-                switch (meta.Type)
-                {
-                    case "Solid": m.IsSolid = meta.Value == "True"; break;
-                    case "Friction": m.Friction = meta.Value; break;
-                    case "Damage": m.Damage = Convert.ToInt32(meta.Value == "" ? "0" : meta.Value); break;
-                    case "Action": m.Action = meta.Value; break;
-                    case "Ladder": m.IsLadder = meta.Value == "True"; break;
-                }
-            TileAttributes.Add(m);
+            MapController mapController = GameObject.FindGameObjectWithTag("Grid").GetComponent<MapController>();
+            TileAttributes = mapController.LoadedMaps[SpriteSheetName].TileAttributes;
+        }
+        else
+        {
+            json = "{'Items': " + MetaDataJson + "}";
+            MetaDataInfo metaData = JsonConvert.DeserializeObject<MetaDataInfo>(json);
+
+            for (int i = 0; i < metaData.Items.Count; i++)
+            {
+                TileMetaData m = new TileMetaData();
+                foreach (MetaDataItem meta in metaData.Items[i].Data)
+                    switch (meta.Type)
+                    {
+                        case "Solid": m.IsSolid = meta.Value == "True"; break;
+                        case "Friction": m.Friction = meta.Value; break;
+                        case "Damage": m.Damage = Convert.ToInt32(meta.Value == "" ? "0" : meta.Value); break;
+                        case "Action": m.Action = meta.Value; break;
+                        case "Ladder": m.IsLadder = meta.Value == "True"; break;
+                    }
+                TileAttributes.Add(m);
+            }
         }
 
         json = "{'Layers':" + LayersJson + "}";
@@ -172,6 +205,24 @@ public class MapObject : MonoBehaviour
         }
 
         CreatePathFindingArray("Collisions");
+
+        // Create NPCs
+        json = "{'NPC' :" + NPCJson + "}";
+        NPCData npcData = JsonConvert.DeserializeObject<NPCData>(json);
+        foreach(NPCInfo npcInfo in npcData.NPC)
+        {
+            NPC npc = NPCController.CreateNPC(npcInfo.Name, npcInfo.ModelName, npcInfo.X, MapHeight - npcInfo.Y - 1, this);
+            npc.CanMoveToPOI = npcInfo.POI == "True";
+            npc.CanWander = npcInfo.Wander == "True";
+            npc.InteractFunction = npcInfo.IntFunc;
+            npc.InteractParams = npcInfo.IntParam;
+            npc.maxSpeed = npcInfo.Speed;
+            npc.VisibilityFunction = npcInfo.VisFunc;
+            npc.VisibilityParams = npcInfo.VisParam;
+
+            AddNPC(npc);
+        }
+
 
         IsInitialised = true;
     }

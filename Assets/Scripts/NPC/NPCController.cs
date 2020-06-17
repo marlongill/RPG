@@ -10,14 +10,14 @@ public class NPCController : MonoBehaviour
         GameObject sprite = Instantiate(Resources.Load<GameObject>("Characters/" + modelName));
         sprite.tag = "NPC";
         sprite.name = "NPC_" + npcName;
-        sprite.layer = LayerMask.NameToLayer("NPC");
+        sprite.layer = LayerMask.NameToLayer("Player & NPC");
 
         // Add Animation Sprites to NPC object
         SpriteAnimator anim = sprite.GetComponent<SpriteAnimator>();
         anim.Initialise();
 
         SpriteRenderer renderer = sprite.GetComponent<SpriteRenderer>();
-        renderer.sortingOrder = LayerMask.NameToLayer("NPC");
+        renderer.sortingOrder = (int)((map.MapHeight - y) * 100);
         renderer.transform.position = new Vector3(x, y, -0.09f);
         renderer.transform.localScale = new Vector3(1, 1, 1);
         renderer.sprite = anim.Sprites[1];

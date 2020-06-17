@@ -6,7 +6,7 @@ using UnityEngine.U2D;
 
 public class MapController : MonoBehaviour
 {
-    private Dictionary<string, MapObject> LoadedMaps = new Dictionary<string, MapObject>();
+    public Dictionary<string, MapObject> LoadedMaps = new Dictionary<string, MapObject>();
 
     public MapObject CurrentMap;
     
@@ -42,16 +42,13 @@ public class MapController : MonoBehaviour
         player.transform.position = new Vector3(playerX, playerY, -0.1f);
     }
 
-    public List<Vector2Int> GetBlockedCells(string character)
+    public List<Vector2Int> GetBlockedCells(GameObject objectToAvoid)
     {
         List<Vector2Int> result = new List<Vector2Int>();
         Grid grid = GetComponent<Grid>();
         Vector3Int cell = Vector3Int.zero;
 
-        if (character == "Player")
-            cell = grid.WorldToCell(GameObject.FindGameObjectWithTag(character).transform.position);
-        else if (character.StartsWith("NPC"))
-            cell = grid.WorldToCell(CurrentMap.GetNPC(character).gameObject.transform.position);
+        cell = grid.WorldToCell(objectToAvoid.transform.position);
 
         result.Add(new Vector2Int(cell.x, cell.y));
         if (cell.x > 0) result.Add(new Vector2Int(cell.x - 1, cell.y));
@@ -65,9 +62,6 @@ public class MapController : MonoBehaviour
     public void Start()
     {
         ChangeMap("Start_Town", 10.5f, 26.5f);
-
-        NPC npc = NPCController.CreateNPC("John", "NPC_Male1", 24.5f, 5f, CurrentMap);
-        LoadedMaps["Start_Town"].AddNPC(npc);
     }
 
     public void Update()

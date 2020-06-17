@@ -50,6 +50,21 @@ public class SpriteEditorImports {
         public int y;
     }
 
+    private class NPCInfo
+    {
+        public string Name;
+        public string ModelName;
+        public int X;
+        public int Y;
+        public float Speed;
+        public string POI;
+        public string Wander;
+        public string VisFunc;
+        public string VisParam;
+        public string IntFunc;
+        public string IntParam;
+    }
+
     private class MapInfo
     {
         public string SpriteSheetName;
@@ -59,6 +74,7 @@ public class SpriteEditorImports {
         public int CellHeight;
         public List<LayerInfo> Layers;
         public List<PointOfInterest> POI;
+        public List<NPCInfo> NPC;
     }
 
     private static bool ReadJsonFile(
@@ -197,6 +213,9 @@ public class SpriteEditorImports {
 	{
 		string path = EditorUtility.OpenFolderPanel("Import Sprite Editor Maps", "", "");
 		string[] mapFolders = Directory.GetDirectories(path);
+        List<string> foldersToProcess = new List<string>();
+
+        // Determin Order of Import
         foreach (string mapFolder in mapFolders)
         {
             string unityFolder = mapFolder + "\\Unity";
@@ -204,181 +223,198 @@ public class SpriteEditorImports {
 
             if (Directory.Exists(unityFolder))
             {
-                MapInfo mapInfo = null;
-                Sheet sheet = null;
-                Texture2D texture = null;
-                bool hasSpriteSheet = false;
+                if (File.Exists(unityFolder + "\\" + mapName + ".png"))
+                    foldersToProcess.Insert(0, unityFolder);
+                else
+                    foldersToProcess.Add(unityFolder);
+            }
+        }
 
-                bool needUpdate = ReadJsonFile(unityFolder, mapName, ref texture, ref sheet, ref mapInfo, ref hasSpriteSheet);
+        foreach (string unityFolder in foldersToProcess)
+        {
+            string mapFolder = unityFolder.Replace("\\Unity", "");
+            string mapName = mapFolder.Substring(mapFolder.IndexOf("\\") + 1).Replace(" ", "_");
 
-                if (needUpdate)
+            MapInfo mapInfo = null;
+            Sheet sheet = null;
+            Texture2D texture = null;
+            bool hasSpriteSheet = false;
+
+            bool needUpdate = ReadJsonFile(unityFolder, mapName, ref texture, ref sheet, ref mapInfo, ref hasSpriteSheet);
+
+            if (needUpdate)
+            {
+                if (hasSpriteSheet)
                 {
-                    if (hasSpriteSheet)
+                    // Add the image to the assets library
+                    texture.name = mapName;
+                    var bytes = texture.EncodeToPNG();
+                    string assetPath = "Assets/Resources/Maps/" + mapName + "/";
+
+                    if (!Directory.Exists(assetPath))
+                        Directory.CreateDirectory(assetPath);
+
+                    string fileName = assetPath + mapName + ".png";
+                    File.WriteAllBytes(fileName, bytes);
+                    AssetDatabase.Refresh();
+                    AssetDatabase.ImportAsset(fileName);
+                    TextureImporter importer = AssetImporter.GetAtPath(fileName) as TextureImporter;
+                    if (importer.spriteImportMode == SpriteImportMode.Multiple)
                     {
-                        // Add the image to the assets library
-                        texture.name = mapName;
-                        var bytes = texture.EncodeToPNG();
-                        string assetPath = "Assets/Resources/Maps/" + mapName + "/";
+                        importer.spriteImportMode = SpriteImportMode.Single;
+                        AssetDatabase.WriteImportSettingsIfDirty(fileName);
+                    }
+                    TextureImporterSettings settings = new TextureImporterSettings();
+                    importer.ReadTextureSettings(settings);
+                    settings.spriteGenerateFallbackPhysicsShape = false;
+                    importer.SetTextureSettings(settings);
 
-                        if (!Directory.Exists(assetPath))
-                            Directory.CreateDirectory(assetPath);
+                    importer.spriteImportMode = SpriteImportMode.Multiple;
+                    importer.textureType = TextureImporterType.Sprite;
+                    importer.spritePixelsPerUnit = sheet.CellWidth;
 
-                        string fileName = assetPath + mapName + ".png";
-                        File.WriteAllBytes(fileName, bytes);
-                        AssetDatabase.Refresh();
-                        AssetDatabase.ImportAsset(fileName);
-                        TextureImporter importer = AssetImporter.GetAtPath(fileName) as TextureImporter;
-                        if (importer.spriteImportMode == SpriteImportMode.Multiple)
+                    // Build Sprite Sheet
+                    Rect[] rects = InternalSpriteUtility.GenerateGridSpriteRectangles(texture, new Vector2(0, 0), new Vector2(sheet.CellWidth, sheet.CellHeight), new Vector2(0, 0), true);
+
+                    var metas = new List<SpriteMetaData>();
+                    int rectNum = 0;
+
+                    foreach (Rect rect in rects)
+                    {
+                        var meta = new SpriteMetaData();
+                        meta.pivot = Vector2.zero;
+                        meta.alignment = (int)SpriteAlignment.Center;
+                        meta.rect = rect;
+                        meta.name = mapName + "_" + rectNum++;
+                        metas.Add(meta);
+                    }
+
+                    importer.spritesheet = metas.ToArray();
+
+                    AssetDatabase.ImportAsset(fileName, ImportAssetOptions.ForceUpdate);
+
+                    // Set Physics Shapes
+                    UnityEngine.Object[] sprites = AssetDatabase.LoadAllAssetsAtPath("Assets/Resources/Maps/" + mapName + "/" + mapName + ".png");
+
+                    for (int i = 0; i < sprites.Length; i++)
+                    {
+                        Sprite sprite = sprites[i] as Sprite;
+
+                        if (sprite != null)
                         {
-                            importer.spriteImportMode = SpriteImportMode.Single;
-                            AssetDatabase.WriteImportSettingsIfDirty(fileName);
-                        }
-                        TextureImporterSettings settings = new TextureImporterSettings();
-                        importer.ReadTextureSettings(settings);
-                        settings.spriteGenerateFallbackPhysicsShape = false;
-                        importer.SetTextureSettings(settings);
-
-                        importer.spriteImportMode = SpriteImportMode.Multiple;
-                        importer.textureType = TextureImporterType.Sprite;
-                        importer.spritePixelsPerUnit = sheet.CellWidth;
-
-                        // Build Sprite Sheet
-                        Rect[] rects = InternalSpriteUtility.GenerateGridSpriteRectangles(texture, new Vector2(0, 0), new Vector2(sheet.CellWidth, sheet.CellHeight), new Vector2(0, 0), true);
-
-                        var metas = new List<SpriteMetaData>();
-                        int rectNum = 0;
-
-                        foreach (Rect rect in rects)
-                        {
-                            var meta = new SpriteMetaData();
-                            meta.pivot = Vector2.zero;
-                            meta.alignment = (int)SpriteAlignment.Center;
-                            meta.rect = rect;
-                            meta.name = mapName + "_" + rectNum++;
-                            metas.Add(meta);
-                        }
-
-                        importer.spritesheet = metas.ToArray();
-
-                        AssetDatabase.ImportAsset(fileName, ImportAssetOptions.ForceUpdate);
-
-                        // Set Physics Shapes
-                        UnityEngine.Object[] sprites = AssetDatabase.LoadAllAssetsAtPath("Assets/Resources/Maps/" + mapName + "/" + mapName + ".png");
-
-                        for (int i = 0; i < sprites.Length; i++)
-                        {
-                            Sprite sprite = sprites[i] as Sprite;
-
-                            if (sprite != null)
+                            try
                             {
-                                try
+                                int idx = Convert.ToInt32(sprite.name.Substring(sprite.name.LastIndexOf('_') + 1));
+                                List<Vector2> points = new List<Vector2>();
+                                if (sheet.Masks[idx].Count > 0)
                                 {
-                                    int idx = Convert.ToInt32(sprite.name.Substring(sprite.name.LastIndexOf('_') + 1));
-                                    List<Vector2> points = new List<Vector2>();
-                                    if (sheet.Masks[idx].Count > 0)
+                                    for (int e = 0; e < sheet.Masks[idx].Count; e++)
                                     {
-                                        for (int e = 0; e < sheet.Masks[idx].Count; e++)
-                                        {
-                                            Vector2Int pt = sheet.MaskPoints[sheet.Masks[idx][e]];
-                                            float x = (float)pt.x;
-                                            if (x == (sheet.CellWidth / 2) - 1 || x == sheet.CellWidth - 1) x++;
-                                            x = 0 - ((sheet.CellWidth / 2) - x);
+                                        Vector2Int pt = sheet.MaskPoints[sheet.Masks[idx][e]];
+                                        float x = (float)pt.x;
+                                        if (x == (sheet.CellWidth / 2) - 1 || x == sheet.CellWidth - 1) x++;
+                                        x = 0 - ((sheet.CellWidth / 2) - x);
 
-                                            float y = (float)pt.y;
-                                            if (y == (sheet.CellHeight / 2) - 1 || y == sheet.CellHeight - 1) y++;
-                                            y = y + (sheet.CellHeight / 2);
+                                        float y = (float)pt.y;
+                                        if (y == (sheet.CellHeight / 2) - 1 || y == sheet.CellHeight - 1) y++;
+                                        y = y + (sheet.CellHeight / 2);
 
-                                            points.Add(new Vector2(x, sheet.CellHeight - y));
-                                        }
-
-                                        var spritePhysicsShapeImporter = new SpritePhysicsShapeImporter(importer);
-                                        spritePhysicsShapeImporter.SetPhysicsShape(idx, new List<Vector2[]>() { points.ToArray() });
+                                        points.Add(new Vector2(x, sheet.CellHeight - y));
                                     }
-                                }
-                                catch (Exception ex)
-                                {
-                                    Debug.LogError(ex.Message);
+
+                                    var spritePhysicsShapeImporter = new SpritePhysicsShapeImporter(importer);
+                                    spritePhysicsShapeImporter.SetPhysicsShape(idx, new List<Vector2[]>() { points.ToArray() });
                                 }
                             }
-                        }
-
-                        AssetDatabase.ImportAsset(fileName, ImportAssetOptions.ForceUpdate);
-
-                        // Build Tiles
-                        AssetDatabase.StartAssetEditing();
-
-                        // Initialise Array
-                        sprites = AssetDatabase.LoadAllAssetsAtPath("Assets/Resources/Maps/" + mapName + "/" + mapName + ".png");
-                        List<Tile> tiles = new List<Tile>();
-                        for (int i = 0; i < sprites.Length; i++)
-                        {
-                            tiles.Add(null);
-                        }
-
-                        for (int i = 0; i < sprites.Length; i++)
-                        {
-                            Sprite sprite = sprites[i] as Sprite;
-
-                            if (sprite != null)
+                            catch (Exception ex)
                             {
-                                try
-                                {
-                                    int idx = Convert.ToInt32(sprite.name.Substring(sprite.name.LastIndexOf('_') + 1));
-                                    Tile tile = ScriptableObject.CreateInstance<Tile>();
-                                    tile.colliderType = sheet.Masks[idx].Count == 0 ? Tile.ColliderType.None : Tile.ColliderType.Sprite;
-                                    tile.hideFlags = HideFlags.None;
-                                    tile.sprite = sprite;
-                                    tile.name = sprite.name;
-
-                                    path = "Assets/Resources/Maps/" + mapName + "/" + mapName + "_Tile_" + idx.ToString() + ".asset";
-                                    AssetDatabase.CreateAsset(tile, path);
-                                }
-                                catch (Exception ex)
-                                {
-                                    Debug.LogError(ex.Message);
-                                }
+                                Debug.LogError(ex.Message);
                             }
                         }
-
-                        AssetDatabase.StopAssetEditing();
                     }
 
-                    // Create Map GameObject
-                    GameObject go = new GameObject(mapName);
-                    MapObject map = go.AddComponent<MapObject>();
+                    AssetDatabase.ImportAsset(fileName, ImportAssetOptions.ForceUpdate);
 
-                    map.SpriteSheetName = mapInfo.SpriteSheetName;
-                    map.MapWidth = mapInfo.MapWidth;
-                    map.MapHeight = mapInfo.MapHeight;
-                    map.TileWidth = mapInfo.CellWidth;
-                    map.TileHeight = mapInfo.CellHeight;
+                    // Build Tiles
+                    AssetDatabase.StartAssetEditing();
 
-                    // Add Points of Interest
-                    foreach (PointOfInterest poi in mapInfo.POI)
+                    // Initialise Array
+                    sprites = AssetDatabase.LoadAllAssetsAtPath("Assets/Resources/Maps/" + mapName + "/" + mapName + ".png");
+                    List<Tile> tiles = new List<Tile>();
+                    for (int i = 0; i < sprites.Length; i++)
                     {
-                        map.PointOfInterestNames.Add(poi.Name);
-                        map.PointsOfInterest.Add(new POI() { Name = poi.Name, Location = new Vector2Int(poi.x, poi.y) });
+                        tiles.Add(null);
                     }
 
-                    ////public Dictionary<string, NPCController.NPC> NPCs = new Dictionary<string, NPCController.NPC>();
-                    ////public List<List<bool>> PathFindingGrid = new List<List<bool>>();
+                    for (int i = 0; i < sprites.Length; i++)
+                    {
+                        Sprite sprite = sprites[i] as Sprite;
 
-                    // Store Map Layers and Cells Information
-                    string json = JsonConvert.SerializeObject(mapInfo.Layers);
-                    map.LayersJson = json;
+                        if (sprite != null)
+                        {
+                            try
+                            {
+                                int idx = Convert.ToInt32(sprite.name.Substring(sprite.name.LastIndexOf('_') + 1));
+                                Tile tile = ScriptableObject.CreateInstance<Tile>();
+                                tile.colliderType = sheet.Masks[idx].Count == 0 ? Tile.ColliderType.None : Tile.ColliderType.Sprite;
+                                tile.hideFlags = HideFlags.None;
+                                tile.sprite = sprite;
+                                tile.name = sprite.name;
 
-                    // Store Tile Attributes Information
+                                path = "Assets/Resources/Maps/" + mapName + "/" + mapName + "_Tile_" + idx.ToString() + ".asset";
+                                AssetDatabase.CreateAsset(tile, path);
+                            }
+                            catch (Exception ex)
+                            {
+                                Debug.LogError(ex.Message);
+                            }
+                        }
+                    }
+
+                    AssetDatabase.StopAssetEditing();
+                }
+
+                // Create Map GameObject
+                GameObject go = new GameObject(mapName);
+                MapObject map = go.AddComponent<MapObject>();
+
+                map.Name = mapName;
+                map.SpriteSheetName = mapInfo.SpriteSheetName;
+                map.MapWidth = mapInfo.MapWidth;
+                map.MapHeight = mapInfo.MapHeight;
+                map.TileWidth = mapInfo.CellWidth;
+                map.TileHeight = mapInfo.CellHeight;
+
+                // Add Points of Interest
+                foreach (PointOfInterest poi in mapInfo.POI)
+                {
+                    map.PointOfInterestNames.Add(poi.Name);
+                    map.PointsOfInterest.Add(new POI() { Name = poi.Name, Location = new Vector2Int(poi.x, poi.y) });
+                }
+
+                ////public Dictionary<string, NPCController.NPC> NPCs = new Dictionary<string, NPCController.NPC>();
+                ////public List<List<bool>> PathFindingGrid = new List<List<bool>>();
+
+                // Store Map Layers and Cells Information
+                string json = JsonConvert.SerializeObject(mapInfo.Layers);
+                map.LayersJson = json;
+
+                // Store Tile Attributes Information
+                if (hasSpriteSheet)
+                {
                     json = JsonConvert.SerializeObject(sheet.MetaData);
                     map.MetaDataJson = json;
-
-                    // Create Prefab
-                    string localPath = "Assets/Resources/Maps/" + mapName + ".prefab";
-                    PrefabUtility.SaveAsPrefabAsset(go, localPath);
-
-                    // Delete Update file
-                    //File.Delete(unityFolder + "\\" + mapName + "_update.txt.meta");
-                    //File.Delete(unityFolder + "\\" + mapName + "_update.txt");
                 }
+
+                // Store NPC Json
+                map.NPCJson = JsonConvert.SerializeObject(mapInfo.NPC);
+
+                // Create Prefab
+                string localPath = "Assets/Resources/Maps/" + mapName + ".prefab";
+                PrefabUtility.SaveAsPrefabAsset(go, localPath);
+
+                // Delete Update file
+                File.Delete(unityFolder + "\\" + mapName + "_update.txt");
             }
         }
 	}
@@ -494,24 +530,24 @@ public class SpriteEditorImports {
                     // Create Animated Sprite
                     GameObject character = new GameObject("New Sprite");
 
+                    character.layer = LayerMask.NameToLayer("Player & NPC");
+
                     SpriteRenderer renderer = character.AddComponent<SpriteRenderer>();
                     renderer.sprite = Resources.Load<Sprite>("Characters/" + characterName + "/" + characterName + "_1");
                     renderer.drawMode = SpriteDrawMode.Simple;
                     renderer.enabled = true;
-
+                    
                     SpriteAnimator animator = character.AddComponent<SpriteAnimator>();
                     animator.AnimationsJson = "{'Animations':" + JsonConvert.SerializeObject(sheet.Animations) + "}";
                     animator.SpriteCount = sprites.Length - 1;
                     animator.SpriteSheetName = characterName;
 
-                    // Save as Prefab
                     // Create Prefab
                     string localPath = "Assets/Resources/Characters/" + characterName + ".prefab";
                     PrefabUtility.SaveAsPrefabAsset(character, localPath);
 
                     // Delete Update file
-                    //File.Delete(unityFolder + "\\" + characterName + "_update.txt.meta");
-                    //File.Delete(unityFolder + "\\" + characterName + "_update.txt");
+                    File.Delete(unityFolder + "\\" + characterName + "_update.txt");
                 }
             }
         }

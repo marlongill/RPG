@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 7944610069797375850}
   - component: {fileID: 3161323286712419758}
   - component: {fileID: 5613168711090308410}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: NPC_Male1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -94,6 +94,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 17b35704bb7ac8f48afc11bbedd93c83, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _lastAnimation: 
+  Sprites: []
   SpriteSheetName: NPC_Male1
   AnimationsJson: '{''Animations'':[{"Name":"Walk_North","FPS":6,"Loop":true,"Frames":[9,10,11,10]},{"Name":"Walk_South","FPS":6,"Loop":true,"Frames":[0,1,2,1]},{"Name":"Walk_East","FPS":6,"Loop":true,"Frames":[6,7,8,7]},{"Name":"Walk_West","FPS":6,"Loop":true,"Frames":[5,4,3,4]},{"Name":"Idle_North","FPS":1,"Loop":false,"Frames":[10]},{"Name":"Idle_South","FPS":1,"Loop":false,"Frames":[1]},{"Name":"Idle_East","FPS":1,"Loop":false,"Frames":[8]},{"Name":"Idle_West","FPS":1,"Loop":false,"Frames":[4]}]}'
   SpriteCount: 12

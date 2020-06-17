@@ -83,5 +83,7 @@ public class MovementController : MonoBehaviour
         }
 
         transform.Translate(velocity);
+        SpriteRenderer renderer = GetComponent<SpriteRenderer>();
+        renderer.sortingOrder = (int)((mapController.CurrentMap.MapHeight - transform.position.y) * 100);
     }
 }

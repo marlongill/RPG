@@ -123,10 +123,10 @@ public class PathFinder : MonoBehaviour
         }
     }
 
-    public void SetObstacles(string tagName)
+    public void SetObstacles(GameObject objectToAvoid)
     {
         MapController mapController = GameObject.FindGameObjectWithTag("Grid").GetComponent<MapController>();
-        List<Vector2Int> blocakges = mapController.GetBlockedCells(tagName);
+        List<Vector2Int> blocakges = mapController.GetBlockedCells(objectToAvoid);
         foreach (Vector2Int blocked in blocakges)
             _obstacles[blocked.y][blocked.x] = true;
     }
