@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Grid
   - NPC
+  - DialogueBox
   layers:
   - Default
   - TransparentFX
@@ -17,8 +18,8 @@ TagManager:
   - 
   - Background Layer
   - Collision Layer
-  - Player & NPC
   - Foreground Layer
+  - Player & NPC
   - Debug
   - 
   - 

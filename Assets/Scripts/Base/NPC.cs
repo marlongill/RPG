@@ -15,6 +15,7 @@ public class NPC
     private List<Vector2> currentPath = new List<Vector2>();
     private MapObject currentMap;
     private Vector2 destination;
+    private GlobalObjects globalObjects;
 
     // Public Members
     public NPCState state = NPCState.Idle;
@@ -85,12 +86,12 @@ public class NPC
             }
         }
 
-        gameObject.GetComponent<SpriteRenderer>().sortingOrder = (int)((currentMap.MapHeight - gameObject.transform.position.y) * -100);
+        gameObject.GetComponent<SpriteRenderer>().sortingOrder = (int)((currentMap.MapHeight - gameObject.transform.position.y) * 100) + 100;
     }
 
 
     // Public Methods
-    public NPC(string n, GameObject go, MapObject map)
+    public NPC(string n, GameObject go, MapObject map, GlobalObjects globals)
     {
         name = n;
         gameObject = go;
@@ -98,7 +99,7 @@ public class NPC
         animator.SetSpriteRenderer(go.GetComponent<SpriteRenderer>());
         pathFinder = go.GetComponent<PathFinder>();
         grid = GameObject.FindGameObjectWithTag("Grid").GetComponent<Grid>();
-
+        globalObjects = globals;
         currentMap = map;
     }
 
@@ -163,6 +164,9 @@ public class NPC
 
     public void Update()
     {
+        if (globalObjects.Paused)
+            return;
+
         switch (state)
         {
             case NPCState.FindingPath:

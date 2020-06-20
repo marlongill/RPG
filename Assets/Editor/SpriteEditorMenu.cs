@@ -27,6 +27,12 @@ public class SpriteEditorImports {
         public List<MetaDataItem> Data;
     }
 
+    public class CellInfo
+    {
+        public int TileID;
+        public string Action;
+    }
+
     private class Sheet 
     {
         public int CellWidth;
@@ -40,7 +46,7 @@ public class SpriteEditorImports {
     private class LayerInfo
     {
         public string Layer;
-        public List<int> SpriteID;
+        public List<CellInfo> Cells;
     }
 
     private class PointOfInterest
@@ -355,7 +361,7 @@ public class SpriteEditorImports {
                             try
                             {
                                 int idx = Convert.ToInt32(sprite.name.Substring(sprite.name.LastIndexOf('_') + 1));
-                                Tile tile = ScriptableObject.CreateInstance<Tile>();
+                                ActionTile tile = ScriptableObject.CreateInstance<ActionTile>();
                                 tile.colliderType = sheet.Masks[idx].Count == 0 ? Tile.ColliderType.None : Tile.ColliderType.Sprite;
                                 tile.hideFlags = HideFlags.None;
                                 tile.sprite = sprite;

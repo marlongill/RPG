@@ -1,0 +1,45 @@
+{
+	trees:[
+		{
+			'tree' : {
+				'condition' : 'player.NoQuests' ,
+				'dialogue' : [
+					{
+						'id' : '1', 'condition' : '', 'npc' : 'Y',
+						'text' : 'Hi there #PlayerName#, how are you today?' ,
+						'commands' : [ 'GoDialogue(2)' ]
+					} ,
+					{
+						'id' : '2', 'condition' : '', 'npc' : 'N',
+						'text' : 'I'm good thanks.' ,
+						'choices' : [
+							{ 'text' : 'Who are you?', 'commands' : 'GoDialogue(3)' } ,
+							{ 'text' : 'What is this place?', 'commands' : 'GoDialogue(4)' } ,
+							{ 'text' : 'Any idea what I should do now?' : 'GoDialogue(5)' }
+						]
+					} ,
+					{
+						'id' : '3', 'condition' : '', 'npc' : 'Y',
+						'text' : 'I am Aaron Anderson, the Mayor of this town.' ,
+						'commands' [ 'GoDialogue(2)' ]
+					} ,
+					{
+						'id' : '4', 'condition' : '', 'npc' : 'Y',
+						'text' : 'This is Start Town, a quiet location with your house and the local inn.' ,
+						'commands' [ 'GoDialogue(2)' ]
+					} ,
+					{
+						'id' : '5', 'condition' : '', 'npc' : 'Y',
+						'text' : 'I heard that the owner of the inn is having a spot of bother. Perhaps you should go and see what is wrong?' ,
+						'commands' [ 'GoDialogue(6)' ]
+					} ,
+					{
+						'id' : '6', 'condition' : '', 'npc' : 'Y',
+						'text' : 'Thank you Mr Anderson, I will go right away!' ,
+						'commands' [ 'ReceiveAsset(1)', 'EndDialogue()' ]
+					} 
+				]
+			}
+		}
+	]
+}

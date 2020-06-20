@@ -27,10 +27,11 @@ public class MovementController : MonoBehaviour
     {
 
         Vector3Int cell = grid.WorldToCell(point);
-        Tilemap map = grid.gameObject.GetComponentsInChildren<Tilemap>()[layerIndex];
         int tileID = mapController.CurrentMap.GetCell("Collisions", cell.x, cell.y);
 
-        return mapController.CurrentMap.TileAttributes[tileID];
+        TileMetaData attributes = mapController.CurrentMap.TileAttributes[tileID];
+        attributes.Action = mapController.CurrentMap.GetAction(layerIndex, cell);
+        return attributes;
     }
 
     public TileMetaData GetTileBelowPlayer(Vector2 point)
@@ -38,6 +39,8 @@ public class MovementController : MonoBehaviour
         Vector3Int cell = grid.WorldToCell(point);
         int tileID = 0;
         int layer = 1;
+        TileMetaData attributes = new TileMetaData();
+
         while (layer >= 0 && tileID == 0)
         {
             string layerName = "";
@@ -46,11 +49,13 @@ public class MovementController : MonoBehaviour
                 case 0: layerName = "Background"; break;
                 case 1: layerName = "Collisions"; break;
             }
-            Tilemap map = grid.gameObject.GetComponentsInChildren<Tilemap>()[layer];
             tileID = mapController.CurrentMap.GetCell(layerName, cell.x, cell.y);
+
+            attributes = mapController.CurrentMap.TileAttributes[tileID];
+            attributes.Action = mapController.CurrentMap.GetAction(layer, cell);
             layer--;
         }
-        return mapController.CurrentMap.TileAttributes[tileID];
+        return attributes;
     }
 
     public void Move(ref Vector2 velocity)
@@ -84,6 +89,6 @@ public class MovementController : MonoBehaviour
 
         transform.Translate(velocity);
         SpriteRenderer renderer = GetComponent<SpriteRenderer>();
-        renderer.sortingOrder = (int)((mapController.CurrentMap.MapHeight - transform.position.y) * 100);
+        renderer.sortingOrder = (int)((mapController.CurrentMap.MapHeight - transform.position.y) * 100) + 100;
     }
 }

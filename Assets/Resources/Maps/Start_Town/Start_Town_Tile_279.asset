@@ -9,7 +9,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 13312, guid: 0000000000000000e000000000000000, type: 0}
+  m_Script: {fileID: 11500000, guid: ccb648c7eee53344995889efabc1ce73, type: 3}
   m_Name: Start_Town_Tile_279
   m_EditorClassIdentifier: 
   m_Sprite: {fileID: -4280276357387161363, guid: 28ce1962c6c4bde46b3694b555704351,
@@ -35,3 +35,4 @@ MonoBehaviour:
   m_InstancedGameObject: {fileID: 0}
   m_Flags: 1
   m_ColliderType: 0
+  Action: 

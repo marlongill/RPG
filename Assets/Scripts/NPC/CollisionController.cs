@@ -4,17 +4,20 @@ using UnityEngine;
 
 public class CollisionController : MonoBehaviour
 {
-    private void OnCollisionEnter2D(Collision2D collision)
+    void OnTriggerEnter2D(Collider2D other)
     {
-        if (collision.gameObject.tag == "NPC" || collision.gameObject.tag == "Player")
+        if (other.gameObject.tag == "NPC" || other.gameObject.tag == "Player")
         {
-            // Get Reference to the NPC object for this character
-            string npcName = collision.otherCollider.gameObject.name.Replace("NPC_", "");
-            MapObject currentMap = GameObject.FindGameObjectWithTag("Grid").GetComponent<MapController>().CurrentMap;
-            NPC npc = currentMap.NPCs[currentMap.NPCNames.IndexOf(npcName)];
-            if (npc.CanMove)
+            if (this.gameObject.tag != "Player")
             {
-                npc.RecalculatePath(collision.gameObject);
+                // Get Reference to the NPC object for this character
+                string npcName = this.gameObject.name.Replace("NPC_", "");
+                MapObject currentMap = GameObject.FindGameObjectWithTag("Grid").GetComponent<MapController>().CurrentMap;
+                NPC npc = currentMap.NPCs[currentMap.NPCNames.IndexOf(npcName)];
+                if (npc.CanMove)
+                {
+                    npc.RecalculatePath(other.gameObject);
+                }
             }
         }
     }

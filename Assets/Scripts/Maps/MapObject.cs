@@ -26,11 +26,17 @@ public class MapObject : MonoBehaviour
     {
         public List<MetaData> Items;
     }
-    
+
+    private class CellInfo
+    {
+        public int TileID;
+        public string Action;
+    }
+
     private class LayerInfo
     {
         public string Layer;
-        public List<int> SpriteID;
+        public List<CellInfo> Cells;
     }
 
     private class MapCellInfo
@@ -74,12 +80,12 @@ public class MapObject : MonoBehaviour
     public List<string> PointOfInterestNames = new List<string>();
     public List<List<bool>> PathFindingGrid = new List<List<bool>>();
 
-
     public string MetaDataJson = "";
     public string LayersJson = "";
     public string NPCJson = "";
 
     private bool IsInitialised = false;
+    private Dictionary<string, string> Actions;
 
     public void AddNPC(NPC npc)
     {
@@ -150,6 +156,14 @@ public class MapObject : MonoBehaviour
         return PathFindingGrid;
     }
 
+    public string GetAction(int layerIndex, Vector3Int cell)
+    {
+        if (Actions.ContainsKey(LayerNames[layerIndex] + cell.ToString()))
+            return Actions[LayerNames[layerIndex] + cell.ToString()];
+        else
+            return "";
+    }
+
     public void Initialise()
     {
         if (IsInitialised)
@@ -177,7 +191,6 @@ public class MapObject : MonoBehaviour
                         case "Solid": m.IsSolid = meta.Value == "True"; break;
                         case "Friction": m.Friction = meta.Value; break;
                         case "Damage": m.Damage = Convert.ToInt32(meta.Value == "" ? "0" : meta.Value); break;
-                        case "Action": m.Action = meta.Value; break;
                         case "Ladder": m.IsLadder = meta.Value == "True"; break;
                     }
                 TileAttributes.Add(m);
@@ -197,7 +210,8 @@ public class MapObject : MonoBehaviour
                 for (int x = 0; x < MapWidth; x++)
                 {
                     int c = y * MapWidth + x;
-                    layer.Cells[x, y] = mapCellInfo.Layers[i].SpriteID[c];
+                    layer.Cells[x, y] = mapCellInfo.Layers[i].Cells[c].TileID;
+                    layer.Actions[x, y] = mapCellInfo.Layers[i].Cells[c].Action;
                 }
             }
             LayerNames.Add(mapCellInfo.Layers[i].Layer);
@@ -229,6 +243,8 @@ public class MapObject : MonoBehaviour
 
     public void Render(Grid grid)
     {
+        Actions = new Dictionary<string, string>();
+
         for (int l = 0; l < Layers.Count; l++)
         {
             Tilemap map = grid.transform.Find("Tilemap_" + LayerNames[l]).gameObject.GetComponent<Tilemap>();
@@ -243,7 +259,12 @@ public class MapObject : MonoBehaviour
                 {
                     try
                     {
-                        Tile tile = Resources.Load<Tile>("Maps/" + SpriteSheetName + "/" + SpriteSheetName + "_Tile_" + Layers[l].Cells[x, y].ToString());
+                        int tileID = Layers[l].Cells[x, y];
+                        string action = Layers[l].Actions[x, y];
+                        ActionTile tile = Resources.Load<ActionTile>("Maps/" + SpriteSheetName + "/" + SpriteSheetName + "_Tile_" + tileID.ToString());
+                        if (action != "")
+                            Actions.Add(String.Format("{0}({1}, {2}, 0)", LayerNames[l], x, y), action);
+
                         map.SetTile(new Vector3Int(x, y, 0), tile);
                     }
                     catch
