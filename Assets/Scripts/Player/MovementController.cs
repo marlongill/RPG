@@ -11,16 +11,15 @@ public class MovementController : MonoBehaviour
 {
     public LayerMask collisionMask;
 
-    BoxCollider2D collisionBox;
+    PolygonCollider2D collisionBox;
     Grid grid;
     MapController mapController;
 
     void Start()
     {
-        collisionBox = GetComponent<BoxCollider2D>();
-
+        collisionBox = GetComponent<PolygonCollider2D>();
         grid = GameObject.FindGameObjectWithTag("Grid").GetComponent<Grid>();
-        mapController = grid.GetComponent<MapController>();
+        mapController = GameObject.FindGameObjectWithTag("Globals").GetComponent<MapController>();
     }
 
     public TileMetaData GetTileAttributesAtPoint(Vector2 point, int layerIndex)

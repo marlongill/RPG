@@ -1,0 +1,56 @@
+{ 
+	"trees": [
+		{
+			"treeid" : 1 ,
+			"condition" : "Player.QuestCount() == 0" ,
+			"dialogue" : [
+				{
+					"id" : 1, "condition" : "", "npc" : "Y",
+					"text" : "Hi there #PlayerName#, how are you today?" ,
+					"commands" : [ "Dialogue.Go(2)" ]
+				} ,
+				{
+					"id" : 2, "condition" : "", "npc" : "N",
+					"text" : "I'm good thanks." ,
+					"choices" : [
+						{ "text" : "Who are you?", "commands" : [ "Dialogue.Go(3)" ] } ,
+						{ "text" : "What is this place?", "commands" : [ "Dialogue.Go(4)" ] } ,
+						{ "text" : "Any idea what I should do now?", "commands" : [ "Dialogue.Go(5)" ] }
+					]
+				} ,
+				{
+					"id" : 3, "condition" : "", "npc" : "Y",
+					"text" : "I'm Aaron Anderson, the Mayor of this town." ,
+					"commands" : [ "Dialogue.Go(2)" ]
+				} ,
+				{
+					"id" : 4, "condition" : "", "npc" : "Y",
+					"text" : "This is Start Town, a quiet location with your house and the local inn." ,
+					"commands" : [ "Dialogue.Go(2)" ]
+				} ,
+				{
+					"id" : 5, "condition" : "", "npc" : "Y",
+					"text" : "I heard that the owner of the inn is having a spot of bother. Perhaps you should go and see what is wrong?" ,
+					"commands" : [ "Dialogue.Go(6)" ]
+				} ,
+				{
+					"id" : 6, "condition" : "", "npc" : "Y",
+					"text" : "Thank you Mr Anderson, I will go right away!" ,
+					"commands" : [ "Player.ReceiveAsset(1)", "Dialogue.End()" ]
+				} 
+			]
+		} 
+		,
+		{
+			"treeid" : 2 ,
+			"condition" : "Player.OnQuest(1) == True" ,
+			"dialogue" : [
+				{
+					"id" : 7, "condition" : "", "npc" : "Y",
+					"text": "Aren't you supposed to be visiting the inn?" ,
+					"commands" : [ "Dialogue.End()" ]
+				}
+			]
+		}
+	]
+}

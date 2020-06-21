@@ -101,6 +101,8 @@ public class NPC
         grid = GameObject.FindGameObjectWithTag("Grid").GetComponent<Grid>();
         globalObjects = globals;
         currentMap = map;
+
+        globals.GetComponent<DialogueController>().LoadNPCConversation(n);
     }
 
     public void RecalculatePath(GameObject objectToAvoid)
@@ -164,7 +166,7 @@ public class NPC
 
     public void Update()
     {
-        if (globalObjects.Paused)
+        if (globalObjects.GameState != GameStates.Playing)
             return;
 
         switch (state)
@@ -191,7 +193,7 @@ public class NPC
                 if (CanMove)
                 {
                     int random = UnityEngine.Random.Range(0, 10000);
-                    if (random > 9900)
+                    if (random > 9990)
                     {
                         int poi = UnityEngine.Random.Range(0, currentMap.PointsOfInterest.Count);
                         state = NPCState.FindingPath;

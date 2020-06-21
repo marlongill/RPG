@@ -32,13 +32,16 @@ public class NPCController : MonoBehaviour
         
         PolygonCollider2D pc = sprite.AddComponent<PolygonCollider2D>();
         pc.isTrigger = true;
-        
+
+        // Add Box Collider for interactions
+        BoxCollider2D bc = sprite.AddComponent<BoxCollider2D>();
+        bc.isTrigger = true;
+
         // Add Collision Controller
         sprite.AddComponent<CollisionController>();
 
         // Return NPC
-        Grid grid = GameObject.FindGameObjectWithTag("Grid").GetComponent<Grid>();
-        GlobalObjects globalObjects = grid.GetComponent<GlobalObjects>();
+        GlobalObjects globalObjects = GameObject.FindGameObjectWithTag("Globals").GetComponent<GlobalObjects>();
 
         return new NPC(npcName, sprite, map, globalObjects);
     }

@@ -24,6 +24,8 @@ public class SpriteAnimator : MonoBehaviour
     private Dictionary<string, Animation> _animations = new Dictionary<string, Animation>();
     private SpriteRenderer _spriteRenderer;
     private Animation _anim;
+    private GlobalObjects _globals;
+
     public string _lastAnimation = "";
 
     public List<Sprite> Sprites = new List<Sprite>();
@@ -38,7 +40,8 @@ public class SpriteAnimator : MonoBehaviour
         while (i < _anim.Frames.Count)
         {
             _spriteRenderer.sprite = Sprites[_anim.Frames[i]];
-            i++;
+            if (_globals.GameState == GameStates.Playing) 
+                i++;
             yield return new WaitForSeconds(1.0f / _anim.FPS);
             yield return 0;
         }
@@ -95,5 +98,10 @@ public class SpriteAnimator : MonoBehaviour
         AnimationList animations = JsonConvert.DeserializeObject<AnimationList>(AnimationsJson);
         foreach (Animation anim in animations.Animations)
             _animations.Add(anim.Name, anim);
+    }
+
+    private void Start()
+    {
+        _globals = GameObject.FindGameObjectWithTag("Globals").GetComponent<GlobalObjects>();
     }
 }

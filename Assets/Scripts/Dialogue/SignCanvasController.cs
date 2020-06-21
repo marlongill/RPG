@@ -14,7 +14,8 @@ public class SignCanvasController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        TextMeshProUGUI t = transform.GetComponentInChildren<TextMeshProUGUI>();
+        GlobalObjects go = GameObject.FindGameObjectWithTag("Globals").GetComponent<GlobalObjects>();
+        TextMeshProUGUI t = go.SignCanvas.transform.GetComponentInChildren<TextMeshProUGUI>();
         if (t != null)
         {
             MessageText = t;

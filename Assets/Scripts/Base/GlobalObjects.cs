@@ -2,48 +2,37 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+
 public class GlobalObjects : MonoBehaviour
 {
     public Canvas DialogueCanvas;
-    public DialogueCanvasController DialogueController;
+    public DialogueCanvasController DialogueCanvasController;
 
     public Canvas SignCanvas;
-    public SignCanvasController SignController;
+    public SignCanvasController SignCanvasController;
 
-    public bool Paused = false;
-    public bool SignActive = false;
+    private DialogueController DialogueController;
+
+    public GameStates GameState = GameStates.Playing;
 
     // Start is called before the first frame update
     void Start()
     {
-        var canvasList = Resources.FindObjectsOfTypeAll<Canvas>();
-        foreach (Canvas canvas in canvasList)
-        {
-            if (canvas.name == "DialogueCanvas")
-            {
-                DialogueCanvas = canvas;
-                DialogueController = canvas.GetComponent<DialogueCanvasController>();
-            }
-            else if (canvas.name == "SignCanvas")
-            {
-                SignCanvas = canvas;
-                SignController = canvas.GetComponent<SignCanvasController>();
-            }
-        }
+        DialogueCanvasController = GetComponent<DialogueCanvasController>();
+        SignCanvasController = GetComponent<SignCanvasController>();
+        DialogueController = GetComponent<DialogueController>();
     }
 
     public void ShowSign(string text)
     {
         SignCanvas.gameObject.SetActive(true);
-        SignController.ShowMessage(text);
-        SignActive = true;
-        Paused = true;
+        SignCanvasController.ShowMessage(text);
+        GameState = GameStates.InSign;
     }    
 
     public void HideSign()
     {
         SignCanvas.gameObject.SetActive(false);
-        SignActive = false;
-        Paused = false;
+        GameState = GameStates.Playing;
     }
 }

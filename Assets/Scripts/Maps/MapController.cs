@@ -6,10 +6,22 @@ using UnityEngine.U2D;
 
 public class MapController : MonoBehaviour
 {
-    public Dictionary<string, MapObject> LoadedMaps = new Dictionary<string, MapObject>();
+    private Grid grid;
 
+    public Dictionary<string, MapObject> LoadedMaps = new Dictionary<string, MapObject>();
     public MapObject CurrentMap;
     
+    public MapObject LoadMap(string mapName)
+    {
+        MapObject map = Instantiate(Resources.Load<MapObject>("Maps/" + mapName));
+        map.Initialise();
+
+        // Add map to list of maps
+        LoadedMaps.Add(mapName, map);
+
+        return map;
+    }
+
     public void ChangeMap(string mapName, float playerX, float playerY)
     {
         if (CurrentMap != null)
@@ -21,20 +33,16 @@ public class MapController : MonoBehaviour
         {
             map = LoadedMaps[mapName];
             CurrentMap = map;
-            CurrentMap.Render(this.GetComponentInParent<Grid>());
+            CurrentMap.Render(grid);
             CurrentMap.Activate();
         }
         else
         {
-            map = Instantiate(Resources.Load<MapObject>("Maps/" + mapName));
+            map = LoadMap(mapName);
 
             // Render the map
             CurrentMap = map;
-            CurrentMap.Initialise();
-            CurrentMap.Render(this.GetComponentInParent<Grid>());
-
-            // Add map to list of maps
-            LoadedMaps.Add(mapName, map);
+            CurrentMap.Render(grid);
         }
 
         // Change Player Position
@@ -45,7 +53,7 @@ public class MapController : MonoBehaviour
     public List<Vector2Int> GetBlockedCells(GameObject objectToAvoid)
     {
         List<Vector2Int> result = new List<Vector2Int>();
-        Grid grid = GetComponent<Grid>();
+        Grid grid = GameObject.FindGameObjectWithTag("Grid").GetComponent<Grid>();
         Vector3Int cell = Vector3Int.zero;
 
         cell = grid.WorldToCell(objectToAvoid.transform.position);
@@ -61,7 +69,8 @@ public class MapController : MonoBehaviour
 
     public void Start()
     {
-        ChangeMap("Start_Town", 10.5f, 26.5f);
+        grid = GameObject.FindGameObjectWithTag("Grid").GetComponent<Grid>();
+        ChangeMap("Mayors_House", 15.5f, 11.5f);
     }
 
     public void Update()

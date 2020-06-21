@@ -174,7 +174,9 @@ public class MapObject : MonoBehaviour
 
         if (SpriteSheetName != Name)
         {
-            MapController mapController = GameObject.FindGameObjectWithTag("Grid").GetComponent<MapController>();
+            MapController mapController = GameObject.FindGameObjectWithTag("Globals").GetComponent<MapController>();
+            if (!mapController.LoadedMaps.ContainsKey(SpriteSheetName))
+                mapController.LoadMap(SpriteSheetName);
             TileAttributes = mapController.LoadedMaps[SpriteSheetName].TileAttributes;
         }
         else

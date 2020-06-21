@@ -9,6 +9,7 @@ public class InputController : MonoBehaviour
     private string lastAnimation = "";
     private TileMetaData cellBelowMeta;
     private GlobalObjects globalObjects;
+    private NPC InteractableNPC;
 
     private Animator anim;
 
@@ -19,8 +20,12 @@ public class InputController : MonoBehaviour
     {
         movementController = GetComponent<MovementController>();
         anim = GetComponent<Animator>();
-        Grid grid = GameObject.FindGameObjectWithTag("Grid").GetComponent<Grid>();
-        globalObjects = grid.GetComponent<GlobalObjects>();
+        globalObjects = GameObject.FindGameObjectWithTag("Globals").GetComponent<GlobalObjects>();
+    }
+
+    public void SetInteractableNPC(NPC npc)
+    {
+        InteractableNPC = npc;
     }
 
     // Update is called once per frame
@@ -29,10 +34,23 @@ public class InputController : MonoBehaviour
         if (Input.GetKey(KeyCode.Escape))
             Application.Quit();
 
+        // Dialogue Control
+        if (globalObjects.GameState == GameStates.InDialogue)
+        {
+            if (Input.GetKeyDown(KeyCode.Return))
+                globalObjects.GetComponent<DialogueController>().NextStep();
+            else if (Input.GetKeyDown(KeyCode.DownArrow))
+                globalObjects.GetComponent<DialogueController>().NextOption();
+            else if (Input.GetKeyDown(KeyCode.UpArrow))
+                globalObjects.GetComponent<DialogueController>().PreviousOption();
+            
+            return;
+        }
+
         // Get Information Cell Below Player's Feet
         TileMetaData tileMeta = movementController.GetTileBelowPlayer(transform.position + new Vector3(0, -0.5f, 0));
 
-        if (!globalObjects.Paused)
+        if (globalObjects.GameState == GameStates.Playing)
         {
             Vector2 velocity = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
             Vector2.ClampMagnitude(velocity, MAXSPEED);
@@ -55,16 +73,28 @@ public class InputController : MonoBehaviour
             }
         }
 
-        // Check if cell below us has an action if interact key is pressed
+        // Interaction Handler
         if (Input.GetKeyDown(KeyCode.Return))
         {
-            if (tileMeta.Action != "")
+            // Check if we are near enough to interact with an NPC
+            if (InteractableNPC != null)
+            {
+                string[] actionParams = InteractableNPC.InteractFunction.Split(';');
+                switch (actionParams[0])
+                {
+                    case "Talk": 
+                        globalObjects.GetComponent<DialogueController>().StartConversation(InteractableNPC.name);
+                        globalObjects.DialogueCanvas.gameObject.SetActive(true);
+                        break;
+                }
+            }
+            else if (tileMeta.Action != "")
             {
                 string[] actionParameters = tileMeta.Action.Split(';');
                 switch (actionParameters[0])
                 {
                     case "ShowSign":
-                        if (globalObjects.SignActive)
+                        if (globalObjects.GameState == GameStates.InSign)
                             globalObjects.HideSign();
                         else
                             globalObjects.ShowSign(actionParameters[1]);
